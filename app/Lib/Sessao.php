@@ -28,7 +28,7 @@ class Sessao
 
     public static function retornaMensagem()
     {
-        return ($_SESSION['mensagem']) ? $_SESSION['mensagem'] : "";
+        return $_SESSION['mensagem'] ?? "";
     }
 
     public static function gravaFormulario($form)

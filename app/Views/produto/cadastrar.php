@@ -12,24 +12,33 @@
                 <form action="<?php echo 'http://' . APP_HOST . '/produto/salvar/novo'; ?>" method="post" id="formCadastro">
                     <div class="form-group">
                         <label for="nome">Nome do Produto</label>
-                        <input type="text" class="form-control" name="nome" value="<?php if ($viewVar['produto']) echo $viewVar['produto']->getNome(); ?>" required>
+                        <input type="text" class="form-control" name="nome"
+                            value="<?php if (isset($viewVar['produto'])) echo $viewVar['produto']->getNome(); ?>" required>
                     </div>
+
                     <div class="form-group">
                         <label for="descricao">Descrição</label>
-                        <textarea class="form-control" name="descricao"><?php if ($viewVar['produto']) echo $viewVar['produto']->getDescricao(); ?></textarea>
+                        <textarea class="form-control" name="descricao"><?php if (isset($viewVar['produto'])) echo $viewVar['produto']->getDescricao(); ?></textarea>
                     </div>
+
                     <div class="form-group">
                         <label for="preco">Preço</label>
-                        R$ <input type="text" class="form-control <?php if ($Sessao::retornaErro('erropreco') != "") echo "is-invalid"; ?>" name="preco" value="<?php if ($viewVar['produto']) echo $viewVar['produto']->getPreco(); ?>">
+                        R$ <input type="text" class="form-control <?php if ($Sessao::retornaErro('erropreco') != "") echo "is-invalid"; ?>"
+                            name="preco"
+                            value="<?php if (isset($viewVar['produto'])) echo $viewVar['produto']->getPreco(); ?>">
+
                         <div class="invalid-feedback">
                             <?php echo $Sessao::retornaErro('erropreco');
                             $Sessao::limpaErro(); ?>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label for="quantidade">Quantidade</label>
-                        <input type="number" class="form-control" name="quantidade" value="<?php if ($viewVar['produto']) echo $viewVar['produto']->getQuantidade(); ?>" required>
+                        <input type="number" class="form-control" name="quantidade"
+                            value="<?php if (isset($viewVar['produto'])) echo $viewVar['produto']->getQuantidade(); ?>" required>
                     </div>
+
                     <button type="submit" class="btn btn-success btn-sm">Salvar</button>
                 </form>
             </div>

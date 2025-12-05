@@ -22,14 +22,16 @@ class Util
     {
         if (is_array($dados)) {
             foreach ($dados as $chave => $valor) {
-                $valor = filter_var($valor, FILTER_SANITIZE_STRING); //Remove HTML TAGS
-                $valor = str_replace("&#x", '', $valor); //Remove início hexadecimal
-                $valor = stripslashes($valor); //Remove \
+                // CORREÇÃO: Trocamos filter_var(..., FILTER_SANITIZE_STRING) por strip_tags()
+                $valor = strip_tags($valor);
+                $valor = str_replace("&#x", '', $valor);
+                $valor = stripslashes($valor);
                 $dados[$chave] = trim($valor);
             }
         } else {
-            $dados = filter_var($dados, FILTER_SANITIZE_STRING);
-            $dados = str_replace("&#x", '', $dados); //replace o prefixo Hexadecimal com nada
+            // CORREÇÃO: Mesma troca aqui no else
+            $dados = strip_tags($dados);
+            $dados = str_replace("&#x", '', $dados);
             $dados = stripslashes($dados);
             $dados = trim($dados);
         }
