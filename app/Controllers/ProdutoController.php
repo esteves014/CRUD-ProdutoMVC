@@ -83,17 +83,23 @@ class ProdutoController extends Controller
 
     public function excluirConfirma($param)
     {
-        $dados = Util::sanitizar($param);
+        $id = Util::sanitizar($param)[0];
 
-        $objproduto = new Produto();
-        $objproduto->setId($dados[0]);
-        $objproduto->setNome($dados[1]);
-
-        if (!is_numeric($objproduto->getId())) {
-            die("Id do produto não é numérico!");
+        if (!is_numeric($id)) {
+            $this->redirect('/produto/listar');
+            return;
         }
 
-        self::setViewParam('produto', $objproduto);
+        $produtoDAO = new ProdutoDAO();
+        $objProduto = $produtoDAO->listar($id);
+
+        if (!$objProduto) {
+            Sessao::gravaMensagem('<div class="alert alert-danger">Produto não encontrado para exclusão.</div>');
+            $this->redirect('/produto/listar');
+            return;
+        }
+
+        self::setViewParam('produto', $objProduto);
         $this->render('/produto/excluirConfirma');
     }
 

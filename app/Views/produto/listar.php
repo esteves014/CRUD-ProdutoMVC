@@ -39,7 +39,7 @@
                 echo ' <td>' . $qtde . '</td>';
                 echo ' <td>' . $dataCadastro . '</td>';
                 echo ' <td> <a href="http://' . APP_HOST . '/produto/editar/' . $id . '" class="btn btn-info btn-sm">Editar</a>  
-              <a href="http://' . APP_HOST . '/produto/excluirConfirma/' . $id . '/' . $nome . '" class="btn btn-danger btn-sm mt-1">Excluir</a>';
+             <a href="http://' . APP_HOST . '/produto/excluirConfirma/' . $id . '" class="btn btn-danger btn-sm mt-1">Excluir</a>';
                 echo '</tr>';
             }
             echo ' </tbody>';
