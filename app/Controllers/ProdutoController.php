@@ -11,24 +11,24 @@ class ProdutoController extends Controller
 {
     public function listar()
     {
-        $produtoDAO = new ProdutoDAO();  //Conecta ao Banco
+        $produtoDAO = new ProdutoDAO(); 
 
-        self::setViewParam('listaProdutos', $produtoDAO->listar()); //busca os dados
+        self::setViewParam('listaProdutos', $produtoDAO->listar());
 
-        $this->render('/produto/listar'); //Passa os dados p/ a view listar
+        $this->render('/produto/listar');
 
         Sessao::limpaMensagem();
     }
 
     public function editar($params)
     {
-        $id = $params[0]; //Pega o id do produto a ser editado
+        $id = $params[0];
 
         $produtoDAO = new ProdutoDAO();
 
         $objProduto = $produtoDAO->listar($id);
 
-        if ($objProduto == null) //Se NÃO achou produto
+        if ($objProduto == null)
         {
             Sessao::gravaMensagem('<div class="alert alert-danger" role="alert">Falha ao recuperar dados do produto id=' . $id . '</div>');
             $this->redirect('/produto/listar');
@@ -43,73 +43,63 @@ class ProdutoController extends Controller
 
     public function salvar($param)
     {
-        $cmd = $param[0]; //Pega o comando: editar ou novo
-        //Sanitização dos dados do Formulário
+        $cmd = $param[0];
         $dadosform = Util::sanitizar($_POST);
 
         $objproduto = new Produto();
-        //Transfere os dados do Produto do Formulário para o Objeto
         $objproduto->setProduto($dadosform);
 
         $errovalidacao = false;
-        //Aplicar a Validação dos Dados segundo as regras de negócio
-        //Aqui pode-se criar uma classe separada de Validação
         if (empty($dadosform['preco'])) {
             Sessao::gravaMensagem('<div class="alert alert-danger" role="alert">Verifique os Campos em Vermelho.</div>');
-            //Habilita o 'is-invalide' do feedback do campo preço do Form
             Sessao::gravaErro('erropreco', 'Este campo deve ser preemchido');
             $errovalidacao = true;
         }
 
-        if ($errovalidacao) { //Houve erro na validacao
-            //Guarda os dados do POST na viewVar para reapresentar os dados
+        if ($errovalidacao) {
             self::setViewParam('produto', $objproduto);
-            if ($cmd == 'editar') { //O produto está sendo editado
-                $this->render('/produto/editar'); //Retorna ao Formulário de edição
-            } elseif ($cmd == 'novo') { //O produto está sendo cadastrado
-                $this->render('/produto/cadastrar'); //Retorna ao Formulário de cadastro de novo produto
+            if ($cmd == 'editar') {
+                $this->render('/produto/editar');
+            } elseif ($cmd == 'novo') {
+                $this->render('/produto/cadastrar');
             }
-            die(); //Isso é necessário senão ele vai continuar e cadastrar o produto!!!
+            die();
         }
-        //Se passou pela validação sem erros, continua aqui
 
-        $produtoDAO = new ProdutoDAO(); //Conecta no Banco
+        $produtoDAO = new ProdutoDAO();
 
-        if ($cmd == 'editar') { //Salvar produto editado
+        if ($cmd == 'editar') {
             $produtoDAO->atualizar($objproduto);
             Sessao::gravaMensagem('<div class="alert alert-success" role="alert">Produto atualizado com sucesso.</div>');
-        } elseif ($cmd == 'novo') { //Salvar novo produto
+        } elseif ($cmd == 'novo') {
             $produtoDAO->salvar($objproduto);
             Sessao::gravaMensagem('<div class="alert alert-success" role="alert">Novo Produto gravado com sucesso.</div>');
         }
 
-        //Limpa Tudo
         Sessao::limpaErro();
-        //Redireciona para o listar que vai exibir msg de feedback
         $this->redirect('/produto/listar');
     }
 
 
-    public function excluirConfirma($param) //Confirma Exclusão do produto
+    public function excluirConfirma($param)
     {
-        $dados = Util::sanitizar($param); //Pega o id do produto a ser excluído e sanitiza
+        $dados = Util::sanitizar($param);
 
         $objproduto = new Produto();
-        $objproduto->setId($dados[0]);  //Pega o id do produto a ser excluído
-        $objproduto->setNome($dados[1]); //Pega o nome do produto a ser excluído
+        $objproduto->setId($dados[0]);
+        $objproduto->setNome($dados[1]);
 
-        if (!is_numeric($objproduto->getId())) { //Validação
+        if (!is_numeric($objproduto->getId())) {
             die("Id do produto não é numérico!");
         }
 
         self::setViewParam('produto', $objproduto);
-        $this->render('/produto/excluirConfirma'); //Retorna ao Formulário
+        $this->render('/produto/excluirConfirma');
     }
 
     public function excluir($param)
     {
         $objproduto = new Produto();
-        //Pega o id do produto a ser excluído
         $objproduto->setId(Util::sanitizar($_POST['id']));
 
         $produtoDAO = new ProdutoDAO();
